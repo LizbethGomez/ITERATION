@@ -69,7 +69,10 @@ z_scores(x= iris)
 ```
 
 ## multiple outputs
-ˆ
+
+no lists for now
+
+
 ```{r}
 
 mean_and_sd = function(input_x) {
@@ -87,3 +90,43 @@ mean_and_sd = function(input_x) {
        sd = sd_x)
 }
 ```
+
+#multiple inputs
+
+```{r}
+
+sim_data = tibble(
+  x = rnorm(30, mean = 1, sd = 1),
+  y = 2 + 3 * x + rnorm(30, 0, 1)
+)
+sim_data %>%  ggplot (aes(x=x, y=y)) +geom_point()
+ls_fit = lm(y ~ x, data = sim_data)
+  
+beta0_hat = coef(ls_fit)[1]  # intercept
+beta1_hat = coef(ls_fit)[2]  # slope
+```
+
+
+```{r}
+sim_regression = function(n, beta0, beta1) {
+  
+sim_data = tibble(
+  x = rnorm(n, mean = 1, sd = 1),
+  y = beta0 + beta1 * x + rnorm(n, 0, 1)
+)
+
+ls_fit = lm(y ~ x, data = sim_data)
+tibble(
+  beta0_hat = coef(ls_fit)[1],  # intercept
+  beta1_hat = coef(ls_fit)[2]  # slope
+)
+}
+
+sim_regression(n=3000, beta0 = 17, beta1 = -3)
+
+
+sim_regression(n=3000, beta0 = 17, beta1 = -3) # can change some of the arguments and not others, as well as write them in oder without haveing to equal the variables
+
+
+```
+
