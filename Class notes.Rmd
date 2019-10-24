@@ -1,0 +1,25 @@
+---
+title: "Writing Functions"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+Class slides at  [Session 15 - Writing functions](https://p8105.com/writing_functions.html) 
+
+functions have:
+Arguments (input)
+body (code)
+return (fucntion's product)
+
+
+Conditional execution:
+proper fornmating of if statements 
+
+
+```{r}
+plot(cars)
+```
+
+
+
