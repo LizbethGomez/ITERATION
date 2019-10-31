@@ -21,23 +21,22 @@ y= rnorm (n=30, mean =24, sd =.3)
 (x- mean(x))/ sd(x)
 ```
 
-    ##  [1] -0.61204810  0.57770738  1.46559277 -0.92961184 -0.10344922
-    ##  [6]  0.53640013 -1.16013134  0.74311034  2.92718825  0.03286167
-    ## [11] -1.62180096 -0.51903987  0.19754712 -1.17456143 -0.37712446
-    ## [16]  0.28422565 -0.50575841 -0.95533240 -0.77474163  1.10278756
-    ## [21] -0.11645863 -0.14421965  0.30711444  1.06072990  0.04532174
-    ## [26] -1.46271271  0.43627531 -1.19606080  0.74826723  1.18792197
+    ##  [1] -0.62716532 -1.60912297 -0.04441855  0.83841556 -1.11219869
+    ##  [6]  1.31856661 -2.13510658 -0.55354096  0.13533240 -0.92419033
+    ## [11]  0.43031144 -0.71891708  0.46665126  1.39342009 -0.85532204
+    ## [16]  2.44914260 -0.11552069  0.71713598  0.40738367  1.43626227
+    ## [21]  0.57524918 -1.15528958  0.58517861  0.51030446 -0.11352069
+    ## [26]  0.40827142  0.08475081  0.09656926 -0.98694604 -0.90168608
 
 ``` r
 (x_again- mean(x_again))/ sd(x_again)
 ```
 
-    ##  [1] -0.03232770 -0.54615216  1.08944380 -1.43672801 -1.61319447
-    ##  [6]  0.34856621  0.67397116 -0.55537229 -1.48423529  0.70404951
-    ## [11] -0.49580397 -2.09213288  0.58118249  0.33836715  1.12390384
-    ## [16]  1.44119875 -0.13895446 -0.22073871 -0.46854693  0.07077733
-    ## [21]  0.12345508  0.64652237  0.42799237 -0.29182885 -0.51411763
-    ## [26]  1.99138248 -0.17087740  1.67860473  0.43152148 -1.60992802
+    ##  [1]  0.2623281 -2.2264181  0.6479063 -0.2444569 -0.8751761  0.3681468
+    ##  [7] -1.2929355 -0.0424370  1.8306354  0.3902769 -1.4541081  0.5307920
+    ## [13] -0.2090461 -1.0920916 -0.7694520  1.2517074  0.5983436  0.3983023
+    ## [19]  1.5361104  1.0728376  0.9042976 -1.8822513 -1.0649508  0.7309393
+    ## [25]  0.1542408 -0.1001877 -0.0650134  0.8656783 -0.7268320  0.5028139
 
 Now a fucntion: the x argument insude the fucntion even if there is an x
 in the environment the x will be from the function
@@ -151,7 +150,7 @@ sim_regression(n=3000, beta0 = 17, beta1 = -3)
     ## # A tibble: 1 x 2
     ##   beta0_hat beta1_hat
     ##       <dbl>     <dbl>
-    ## 1      17.0     -2.98
+    ## 1      17.0     -3.01
 
 ``` r
 sim_regression(n=3000, beta0 = 17, beta1 = -3) # can change some of the arguments and not others, as well as write them in oder without haveing to equal the variables
@@ -160,4 +159,131 @@ sim_regression(n=3000, beta0 = 17, beta1 = -3) # can change some of the argument
     ## # A tibble: 1 x 2
     ##   beta0_hat beta1_hat
     ##       <dbl>     <dbl>
-    ## 1      17.0     -2.99
+    ## 1      17.0     -3.02
+
+# Scrape lots of Napoleon
+
+``` r
+read_page_reviews <- function(url) {
+  
+  h = read_html(url)
+
+dynamite_html = read_html(url)
+
+review_titles = dynamite_html %>%
+  html_nodes("#cm_cr-review_list .review-title") %>%
+  html_text()
+
+review_stars = dynamite_html %>%
+  html_nodes("#cm_cr-review_list .review-rating") %>%
+  html_text()
+
+review_text = dynamite_html %>%
+    html_nodes(".review-data:nth-child(4)") %>%
+    html_text()
+
+reviews = tibble(
+  title = review_titles,
+  stars = review_stars,
+  text = review_text
+)
+reviews
+}
+```
+
+``` r
+read_page_reviews("https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1")
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                           stars         text                      
+    ##    <chr>                           <chr>         <chr>                     
+    ##  1 "Gotta watch it!\n            " 5.0 out of 5… Format: Prime VideoVerifi…
+    ##  2 "Great movie\n            "     5.0 out of 5… Format: Blu-rayVerified P…
+    ##  3 "Duh\n            "             5.0 out of 5… Format: Prime VideoVerifi…
+    ##  4 "Great video\n            "     5.0 out of 5… Format: DVDVerified Purch…
+    ##  5 "Give me some of your tots\n  … 5.0 out of 5… Format: Prime VideoVerifi…
+    ##  6 "Nostalgic\n            "       5.0 out of 5… Format: Prime VideoVerifi…
+    ##  7 "Make you giggle type movie\n … 5.0 out of 5… Format: Blu-rayVerified P…
+    ##  8 "This movie is so stupid.\n   … 5.0 out of 5… Format: Prime VideoVerifi…
+    ##  9 "Hilarious\n            "       5.0 out of 5… Format: Prime VideoVerifi…
+    ## 10 "Waste of money\n            "  1.0 out of 5… Format: Prime VideoVerifi…
+
+``` r
+read_page_reviews("https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=2") #page 2
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                               stars        text                   
+    ##    <chr>                               <chr>        <chr>                  
+    ##  1 "Good movie\n            "          5.0 out of … Format: Prime VideoVer…
+    ##  2 "A classic\n            "           5.0 out of … Format: Prime VideoVer…
+    ##  3 "FRIKKEN SWEET MOVIE, GAWSH.\n    … 5.0 out of … Format: Prime VideoVer…
+    ##  4 "You gonna eat the rest of your to… 5.0 out of … Format: Prime VideoVer…
+    ##  5 "Tina you fat lard come get some d… 5.0 out of … Format: Prime VideoVer…
+    ##  6 "Great family movie\n            "  5.0 out of … Format: Blu-rayVerifie…
+    ##  7 "Teens love it\n            "       5.0 out of … Format: Prime VideoVer…
+    ##  8 "Great\n            "               5.0 out of … Format: DVDVerified Pu…
+    ##  9 "Great Movie, Bad Packaging\n     … 4.0 out of … Format: Blu-rayVerifie…
+    ## 10 "jeez napoleon\n            "       5.0 out of … Format: Prime VideoVer…
+
+``` r
+read_page_reviews("https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=3") #page 3
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                             stars         text                    
+    ##    <chr>                             <chr>         <chr>                   
+    ##  1 "👍\n            "                5.0 out of 5… Format: Prime VideoVeri…
+    ##  2 "A classic!\n            "        5.0 out of 5… Format: DVDVerified Pur…
+    ##  3 "A must own\n            "        5.0 out of 5… Format: Prime VideoVeri…
+    ##  4 "If you like 80s ...you must wat… 5.0 out of 5… Format: Prime VideoVeri…
+    ##  5 "🤘\n            "                5.0 out of 5… Format: Prime VideoVeri…
+    ##  6 "Super Slow Mooovie...\n        … 1.0 out of 5… Format: Prime VideoVeri…
+    ##  7 "Awesome!\n            "          5.0 out of 5… Format: Prime VideoVeri…
+    ##  8 "Very funny\n            "        4.0 out of 5… Format: Prime VideoVeri…
+    ##  9 "Eat your food tina\n           … 5.0 out of 5… Format: Prime VideoVeri…
+    ## 10 "Dumb funny\n            "        5.0 out of 5… Format: DVDVerified Pur…
+
+\#Funtions a arguments
+
+``` r
+x = rnorm(25, 0, 1)
+
+my_summary = function(x, summ_func) {
+  summ_func(x)
+}
+
+
+my_summary(x, sd)
+```
+
+    ## [1] 0.9956099
+
+``` r
+my_summary(x, IQR)
+```
+
+    ## [1] 1.029099
+
+``` r
+my_summary(x, var)
+```
+
+    ## [1] 0.9912391
+
+\#Scoping and names
+
+``` r
+f = function(x) {
+  z = x + y
+  z
+}
+
+x = 1
+y = 2
+
+f(x = y)
+```
+
+    ## [1] 4

@@ -1,0 +1,119 @@
+---
+title: "iteration 2"
+author: "Lizbeth Gomez"
+date: "10/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(purrr)
+```
+
+class slides @ [Session 16 - iteration List columns](https://p8105.com/iteration_and_listcols.html)
+
+```{r}
+l = list(vec_numeric = 5:8,
+         mat         = matrix(1:8, 2, 4),
+         vec_logical = c(TRUE, FALSE),
+         summary     = summary(rnorm(1000)))
+l
+```
+
+
+```{r}
+l$vec_numeric
+
+l$summary
+
+l[[2]] # to look at the items inb the df
+
+l[2]
+
+
+```
+
+```{r}
+df = list(
+  a = rnorm(20, 3, 1),
+  b = rnorm(20, 0, 5),
+  c = rnorm(20, 10, .2),
+  d = rnorm(20, -3, 1)
+)
+
+df$a
+
+
+```
+
+```{r}
+mean_and_sd = function(x) {
+  
+  if (!is.numeric(x)) {
+    stop("Argument x should be numeric")
+  } else if (length(x) == 1) {
+    stop("Cannot be computed for length 1 vectors")
+  }
+  
+  mean_x = mean(x)
+  sd_x = sd(x)
+  
+  list(
+    mean = mean_x, 
+    sd = sd_x
+  )
+}
+```
+
+```{r}
+mean_and_sd(df[[1]])
+```
+
+```{r}
+output = vector("list", length = 4)
+```
+
+```{r}
+for (i in 1:4){
+  output[[i]] = mean_and_sd(df[[i]])
+}
+
+output
+
+output = map(df, mean_and_sd)
+
+output = map(df, median)
+
+output = map(df, summary)
+```
+
+missed a bunch of stuff here
+
+#list columns
+
+```{r}
+weather = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2016-01-01",
+    date_max = "2016-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY", 
+                      USC00519397 = "Waikiki_HA",
+                      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+
+```{r}
+weather_nest = 
+  nest(weather, data = date:tmin)
+
+weather_nest
+```
+
